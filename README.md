@@ -50,7 +50,7 @@ Bu projede, kullanıcılar:
 
 - **Teknolojiler**:
     - **Frontend**: Next.js, React, Tailwind CSS.
-    - **Backend**: Node.js, Express.js, MySQL.
+    - **Backend**: Node.js, Express.js, PostgreSQL.
     - **Gerçek Zamanlı İletişim**: WebSockets.
     - **Kimlik Doğrulama**: OAuth2, JWT.
 
