@@ -29,12 +29,12 @@ const Page = () => {
 
             const login_Response = getCookie("loginresponse");
             const parse = JSON.parse(login_Response)
-            console.log("parse", parse)
-
             if (parse?.status !== 200) {
                 return toast("Oops, something went wrong!", {
                     description: "Hey, I am sorry but something went wrong.",
                 })
+            } else {
+                window.location.href = '/'
             }
 
             return toast("Yuppyy ! You're now logged in!", {

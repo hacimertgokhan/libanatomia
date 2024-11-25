@@ -44,12 +44,13 @@ export const {
                     const data = await response.json();
                     const jsonString = JSON.stringify(data);
                     await (await cookies()).set("loginresponse", jsonString);
-                    if (data?.message ==null) {
-                        return Promise.resolve(data)
-                    } else {
+                    if(data.status === 200) {
                         return data;
+                    } else {
+                        return null;
                     }
                 } catch (error) {
+                    console.log("Authentication error:", error);
                     return Promise.resolve(null);
                 }
             },
@@ -62,18 +63,16 @@ export const {
         async redirect({url, baseUrl}) {
             return process.env.BASEURL;
         },
-        async jwt({token, user, trigger, session}) {
-            if (user) {
-                token.data = {...user};
+        async jwt({user,token}) {
+            if(user) {
+                return user;
+            }else{
+                return token
             }
-            if (trigger === "update" && session) {
-                token = {...token, user: session};
-                return token;
-            }
-            return token;
         },
         async session({session, token}) {
-            session.user = jwt.decode(token.data);
+            session.user.token = token.data;
+            session.user.data = jwt.decode(token.data);
             return session;
         },
     }
