@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
 import process from 'process';
+import jwt from "jsonwebtoken";
 
 export const {
     handlers: { GET, POST },
@@ -28,21 +29,20 @@ export const {
             },
             async authorize(credentials) {
                 try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/auth/signin`, {
+                    const response = await fetch(`http://localhost:8000/auth/signin`, {
                         method: "POST",
                         cache: "no-store",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            username: credentials?.email,
+                            email: credentials?.email,
                             password: credentials?.password,
                         }),
                     });
 
                     const data = await response.json();
                     const jsonString = JSON.stringify(data);
-                    console.log(jsonString)
                     await (await cookies()).set("loginresponse", jsonString);
                     if (data?.message ==null) {
                         return Promise.resolve(data)
@@ -50,7 +50,6 @@ export const {
                         return data;
                     }
                 } catch (error) {
-                    console.log("Authentication error:", error);
                     return Promise.resolve(null);
                 }
             },
@@ -65,7 +64,7 @@ export const {
         },
         async jwt({token, user, trigger, session}) {
             if (user) {
-                token.user = {...user};
+                token.data = {...user};
             }
             if (trigger === "update" && session) {
                 token = {...token, user: session};
@@ -74,7 +73,7 @@ export const {
             return token;
         },
         async session({session, token}) {
-            session = token.user;
+            session.user = jwt.decode(token.data);
             return session;
         },
     }

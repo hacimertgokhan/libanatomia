@@ -24,19 +24,7 @@ router.post('/signin', async (req, res) => {
             delete checkEmail.password
             const token = jwt.sign(checkEmail, process.env.NEXTAUTH_SECRET, { expiresIn: "24h" });
             if(isPasswordsMatch) {
-                const updateToken = await prisma.users.update({
-                    where: {
-                        email: email,
-                    },
-                    data: {
-                        token: token,
-                    }
-                })
-                if(updateToken) {
-                    return success(res, token, 200)
-                } else {
-                    return error(res, "Token güncellenemedi.", 404)
-                }
+                return success(res, token, 200)
             } else {
                 return error(res, "Şifre geçersiz.", 404)
             }

@@ -10,10 +10,11 @@ import {
     NavigationMenuTrigger, navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import {Button} from "@/components/ui/button";
-import {EarthIcon, MailIcon} from "lucide-react";
+import {EarthIcon, LogOutIcon, MailIcon} from "lucide-react";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {Separator} from "@/components/ui/separator";
+import {signOut} from "next-auth/react";
 
 const Header = ({session}) => {
 
@@ -145,8 +146,10 @@ const Header = ({session}) => {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className={"flex items-center justify-center gap-2 flex-row"}>
-                <Button size={"sm"}>
-                    <MailIcon/> Signin
+                <Button size={"sm"} onClick={async () => {
+                    await signOut()
+                }}>
+                    Signout <LogOutIcon/>
                 </Button>
             </div>
             <Separator orientation={"horizontal"} className={"absolute bottom-0 right-0 left-0 w-full"}/>
